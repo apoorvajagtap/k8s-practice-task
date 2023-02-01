@@ -10,4 +10,5 @@ spec:
   selector:
     app: helloworld
   sessionAffinity: None
+  # Using the 'NodePort' type to expose the application on one of the ports of the application node.
   type: NodePort
