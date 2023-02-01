@@ -1,0 +1,26 @@
+# Prerequisites to be performed on minikube before configuring this:
+# 1. Enable ingress controller add on: `$ minikube addons enable ingress`
+# 2. Confirm whether the ingress-controller pod has switched to a running state or not: 
+#    `kubectl get pods -n ingress-nginx`
+# 3. Find the node's IP that makes the application externally available & 
+#    Add a DNS entry in /etc/hosts (as a workaround for now): 
+#    `$ minikube service helloworld --url -n k8s | awk -F'[/:]' '{print $4}'`
+#    `$ echo "<previous_output> host.example.com" >> /etc/hosts`
+# 4. Then create the ingress rule using this yaml. `kubectl apply -n k8s -f k8s_manifests/ingress.yaml`
+# 5. The application should be accessible at `http://host.example.com/` now. 
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: nginx-ingress-helloworld
+spec:
+  rules:
+  - host: host.example.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+             name: helloworld
+             port:
+               number: 8080
